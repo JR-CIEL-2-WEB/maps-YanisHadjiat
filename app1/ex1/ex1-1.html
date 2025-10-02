@@ -28,27 +28,12 @@
 	var i;
 	document.getElementById("Button1").addEventListener('click',readTab);
 
-	function readTab(){
-				// 1. Convertir la chaîne JSON en objet JavaScript
-		let disque = JSON.parse(CD);
-
-		// 2. Récupérer toutes les clés de l'objet
-		let cles = Object.keys(disque);
-
-		// 3. Préparer une variable pour stocker le texte
-		let contenuHTML = "";
-
-		// 4. Boucle classique avec un index
-		for (let i = 0; i < cles.length; i++) {
-			let cle = cles[i];          // ex: "TITLE"
-			let valeur = disque[cle];   // ex: "Empire Burlesque"
-			contenuHTML += cle + " : " + valeur + "<br>";
-		}
-
-		// 5. Afficher le résultat
-		document.getElementById("result").innerHTML = contenuHTML;
-
-	}
+	function readTab() {
+  		var cd = JSON.parse(CD);   
+  		for (const cle in cd) {    
+    		console.log(cle + " : " + cd[cle]);   
+  }
+}
   
 </script>
 
