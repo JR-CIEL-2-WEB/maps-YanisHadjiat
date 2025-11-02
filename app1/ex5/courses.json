@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "name": "Parcours Paris - Tour Eiffel à l'Arc de Triomphe",
+    "description": "Magnifique parcours traversant Paris de la Tour Eiffel à l'Arc de Triomphe",
+    "coordinates": [
+      [48.8584, 2.2945],
+      [48.8606, 2.2975],
+      [48.8641, 2.3126],
+      [48.8698, 2.3078],
+      [48.8738, 2.2950]
+    ]
+  },
+  {
+  "id": 2,
+  "name": "Course autour de la Tour Eiffel",
+  "description": "Parcours  autour de la Tour Eiffel et du Champ de Mars",
+  "coordinates": [
+    [48.8584, 2.2945],
+    [48.8605, 2.2945],
+    [48.8605, 2.2995],
+    [48.8540, 2.2995],
+    [48.8540, 2.2900],
+    [48.8584, 2.2945]
+  ]
+  },
+  {
+    "id": 3,
+    "name": "Course des Champs-Élysées",
+    "description": "Course le long de la plus belle avenue du monde",
+    "coordinates": [
+      [48.8738, 2.2950],
+      [48.8720, 2.3000],
+      [48.8680, 2.3050],
+      [48.8700, 2.3100],
+      [48.8738, 2.2950]
+    ]
+  }
+]
