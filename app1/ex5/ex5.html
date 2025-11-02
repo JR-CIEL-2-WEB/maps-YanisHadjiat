@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Courses Paris</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="container">
+    <div id="sidebar">
+      <select id="tripSelector">
+        <option value="">-- Choisir un trajet --</option>
+      </select>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    let map;
+    let courses = [];
+    let currentPolyline = null;
+    let currentMarkers = [];
+    let currentInfoWindow = null;
+
+    // Initialiser la carte (appelé par l'API Google Maps)
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 48.8566, lng: 2.3522 },
+        zoom: 13,
+        mapTypeControl: false,
+      });
+
+      loadCourses();
+      buildSelector();
+    }
+
+    // Charger la liste des courses pour le menu déroulant
+    function loadCourses() {
+      $.ajax({
+        url: "courses.json",
+        dataType: "json",
+        success: function (data) {
+          courses = data;
+        },
+        error: function (xhr, status, error) {
+          console.error("Erreur lors du chargement des trajets :", error);
+        }
+      });
+    }
+
+    // Construire le menu déroulant
+    function buildSelector() {
+      const sel = document.getElementById("tripSelector");
+      
+      // Charger la liste des courses pour le sélecteur
+      $.ajax({
+        url: "courses.json",
+        dataType: "json",
+        success: function (data) {
+          courses = data;
+          
+          courses.forEach((course, idx) => {
+            const opt = document.createElement("option");
+            opt.value = idx;
+            opt.text = course.name;
+            sel.appendChild(opt);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error("Erreur lors du chargement des trajets :", error);
+        }
+      });
+
+      // Événement de sélection
+      sel.addEventListener("change", () => {
+        const idx = sel.value;
+        
+        // Effacer le trajet et marqueurs précédents
+        clearMap();
+        
+        // Si une course est sélectionnée
+        if (idx !== "") {
+          // Requête AJAX pour charger les données de la course
+          $.ajax({
+            url: "courses.json",
+            dataType: "json",
+            success: function (data) {
+              const course = data[idx];
+              displayCourse(course);
+            },
+            error: function (xhr, status, error) {
+              console.error("Erreur lors du chargement du trajet :", error);
+            }
+          });
+        }
+      });
+    }
+
+    // Afficher une course sur la carte
+    function displayCourse(course) {
+      const pathCoords = course.coordinates.map(coord => ({ 
+        lat: coord[0], 
+        lng: coord[1] 
+      }));
+
+      // Tracer le trajet en rouge
+      currentPolyline = new google.maps.Polyline({
+        path: pathCoords,
+        geodesic: true,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        map: map
+      });
+
+      // Placer les marqueurs
+      pathCoords.forEach((point, i) => {
+        const marker = new google.maps.Marker({
+          position: point,
+          map: map,
+        });
+        currentMarkers.push(marker);
+      });
+
+      // Zoom automatique sur la course
+      const bounds = new google.maps.LatLngBounds();
+      pathCoords.forEach(p => bounds.extend(p));
+      map.fitBounds(bounds);
+
+
+    }
+
+    // Effacer tous les éléments de la carte
+    function clearMap() {
+      // Effacer le trajet
+      if (currentPolyline) {
+        currentPolyline.setMap(null);
+        currentPolyline = null;
+      }
+      
+      // Effacer les marqueurs
+      currentMarkers.forEach(marker => marker.setMap(null));
+      currentMarkers = [];
+      
+      // Fermer l'info-bulle
+      if (currentInfoWindow) {
+        currentInfoWindow.close();
+        currentInfoWindow = null;
+      }
+    }
+  </script>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Y32T_PJHZxYcK3BJYJFNwSl6cuvLXpo&callback=initMap"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<html>
+
+</html>
+
+<head>
+  <title>Simple Markers</title>
+
+  <link rel="stylesheet" type="text/css" href="./style.css" />
+  <script type="module" src="./index.js"></script>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <!-- 
+      The `defer` attribute causes the script to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises. See
+      https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Y32T_PJHZxYcK3BJYJFNwSl6cuvLXpo&callback=initMap&v=weekly"
+    defer></script>
+  <script>
+    function initMap() {
+      const myLatLng0 = { lat: 48.958866, lng: 2.546653 };
+      const myLatLng1 = { lat: 48.959118, lng: 2.544293, };
+      const myLatLng2 = { lat: 48.960971, lng: 2.543334 };
+      const myLatLng3 = { lat: 48.963366 , lng: 2.550715 };
+      const myLatLng4 = { lat: 48.961323, lng: 2.552775 };
+      const myLatLng5 = { lat: 48.960111, lng: 2.547904};
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: myLatLng0,
+        center: myLatLng1,
+        center: myLatLng2,
+        center: myLatLng3,
+        center: myLatLng4,
+        center: myLatLng5,
+      });
+
+      new google.maps.Marker({
+        position: myLatLng0,
+        map,
+        title: "Lycée jean rostand",
+      });
+
+       new google.maps.Marker({
+        position: myLatLng1,
+        map,
+        title: "stade municipal",
+      });
+
+        new google.maps.Marker({
+        position: myLatLng2,
+        map,
+        title: "stade municipal",
+      });
+
+       new google.maps.Marker({
+        position: myLatLng3,
+        map,
+        title: "stade municipal",
+      });
+
+        new google.maps.Marker({
+        position: myLatLng4,
+        map,
+        title: "stade municipal",
+      });
+
+       new google.maps.Marker({
+        position: myLatLng5,
+        map,
+        title: "stade municipal",
+      });
+
+    }
+
+    window.initMap = initMap;
+  </script>
+</body>
+
+</html>

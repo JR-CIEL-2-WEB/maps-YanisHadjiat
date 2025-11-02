@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Paris - Mes Lieux</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+
+    <h1>Paris</h1>
+    <hr>
+    <div id="map">...</div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Y32T_PJHZxYcK3BJYJFNwSl6cuvLXpo&callback=loadDoc&v=weekly" defer></script>
+    <script>
+
+        var markers;
+
+        function loadDoc() {
+            fetch("markersJrostand.json")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau');
+                    }
+                    return response.json();
+                })
+                .then(markersData => {
+                    markers = markersData;
+                    
+                    // Afficher les coordonnées dans la console
+                    for(let i = 0; i < markers.length; i++){
+                        let marker = markers[i];
+                        for(key in marker){
+                            console.log(key + ": " + marker[key]);
+                        }
+                        console.log("____________");
+                    }
+
+                    initMap();
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
+        };
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById("map"), {
+                center: new google.maps.LatLng(48.8566, 2.3522),
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            // Création d'une InfoWindow
+            var infoWindow = new google.maps.InfoWindow();
+
+            // Définir les descriptions avec IMAGES pour chaque marqueur
+            const descriptions = [
+                `<div class="info-window-content">
+                    <h3 class="tour-eiffel-title">🗼 Tour Eiffel</h3>
+                    <img src="Image/TourEiffel.jpg" alt="Tour Eiffel" class="info-window-image">
+                    <p>La Tour Eiffel est une tour de fer puddlé de 330 mètres de hauteur située à Paris.</p>
+                </div>`,
+                
+                `<div class="info-window-content">
+                    <h3 class="champs-elysees-title">🛍️ Champs-Élysées</h3>
+                    <img src="Image/Champs-Elysées.jpeg" alt="Champs-Élysées" class="info-window-image">
+                    <p>L'avenue des Champs-Élysées est une voie de Paris. Lieu de promenade et de shopping, c'est l'une des avenues les plus célèbres du monde.</p>
+                </div>`
+            ];
+
+            // Créer les marqueurs
+            for (let i = 0; i < markers.length; i++) {
+                let latlng = new google.maps.LatLng(markers[i].lat, markers[i].lng);
+                
+                let marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    title: i === 0 ? "Tour Eiffel" : "Champs-Élysées"
+                });
+
+                // Gestion du clic avec InfoWindow
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infoWindow.setContent(descriptions[i]);
+                        infoWindow.open(map, marker);
+                    };
+                })(marker, i));
+            }
+        }
+
+    </script>
+
+</body>
+</html>
